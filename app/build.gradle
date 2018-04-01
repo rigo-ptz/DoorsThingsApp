@@ -23,20 +23,49 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.google.android.things.contrib:driver-button:0.3'
-    implementation 'com.google.android.things.contrib:driver-cap12xx:0.3'
-    implementation 'com.android.support:support-v4:27.1.0'
+
+    // CORE
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compileOnly 'com.google.android.things:androidthings:+'
+
+    // TESTS
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compileOnly 'com.google.android.things:androidthings:+'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
+    // SUPPORT
+    implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // GS
     implementation 'com.google.android.gms:play-services-nearby:11.8.0'
 
+    // THINGS
+    implementation 'com.google.android.things.contrib:driver-button:0.3'
+    implementation 'com.google.android.things.contrib:driver-cap12xx:0.3'
+
+    // MPV
     implementation "com.arello-mobile:moxy:1.5.3"
     kapt "com.arello-mobile:moxy-compiler:1.5.3"
     implementation "com.arello-mobile:moxy-android:1.5.3"
     implementation "com.arello-mobile:moxy-app-compat:1.5.3"
+
+    // JSON
+    implementation "com.google.code.gson:gson:2.8.1"
+
+    // DI
+    implementation "com.google.dagger:dagger:2.10"
+    kapt "com.google.dagger:dagger-compiler:2.10"
+    compileOnly "javax.annotation:jsr250-api:1.0"
+
+    // NETWORK
+    implementation "com.squareup.retrofit2:retrofit:2.3.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.9.0"
+
+    // RX
+    implementation "io.reactivex.rxjava2:rxjava:2.1.2"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.0.3"
 }
