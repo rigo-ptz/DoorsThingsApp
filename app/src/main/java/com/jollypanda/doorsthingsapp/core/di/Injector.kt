@@ -1,6 +1,7 @@
 package com.jollypanda.petrsudoors.core.di
 
 import com.google.gson.Gson
+import com.jollypanda.doorsthingsapp.model.KeyModel
 import com.jollypanda.petrsudoors.core.App
 import javax.inject.Inject
 
@@ -14,6 +15,9 @@ class Injector {
 
     @Inject
     lateinit var gson: Gson
+    
+    @Inject
+    lateinit var keyModel: KeyModel
 
     init {
         App.instance.coreComponent.injectTo(this)
