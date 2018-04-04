@@ -9,9 +9,9 @@ import javax.inject.Inject
  * @author Yamushev Igor
  * @since  18.03.18
  */
-inline fun <T> inject(crossinline block: Injector.() -> T): Lazy<T> = lazy { Injector().block() }
+inline fun <T> inject(crossinline block: Injector.() -> T): Lazy<T> = lazy { Injector.getInstance().block() }
 
-class Injector {
+class Injector private constructor() {
 
     @Inject
     lateinit var gson: Gson
@@ -21,5 +21,14 @@ class Injector {
 
     init {
         App.instance.coreComponent.injectTo(this)
+    }
+    
+    companion object {
+        private var mInstance: Injector? = null
+        
+        fun getInstance(): Injector {
+            if (mInstance == null) mInstance = Injector()
+            return mInstance!!
+        }
     }
 }

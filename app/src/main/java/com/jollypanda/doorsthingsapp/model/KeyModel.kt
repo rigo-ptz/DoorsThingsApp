@@ -1,7 +1,7 @@
 package com.jollypanda.doorsthingsapp.model
 
 import com.jollypanda.doorsthingsapp.data.remote.Api
-import com.jollypanda.doorsthingsapp.utils.asRetrofitResponse
+import com.jollypanda.doorsthingsapp.utils.asRetrofitBody
 
 /**
  * @author Yamushev Igor
@@ -11,12 +11,12 @@ class KeyModel(
     private val api: Api
 ) {
     
-    fun getKey(number: String, token: String)=
+    fun getKey(number: String, token: String) =
         api.getKeyByNum(number, "JWT $token")
-            .asRetrofitResponse()
+            .asRetrofitBody()
     
     
-    fun returnKey(number: String, token: String)=
+    fun returnKey(number: String, token: String) =
             api.returnKeyByNum(number, "JWT $token")
-                .asRetrofitResponse()
+                .asRetrofitBody()
 }

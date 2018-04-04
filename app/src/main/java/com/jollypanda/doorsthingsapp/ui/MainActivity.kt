@@ -75,7 +75,7 @@ class MainActivity : MvpActivity(), MainView {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             Log.e("NEARBY", "payloadCallback onPayloadReceived")
             Log.e("NEARBY+",  "$endpointId sended: ${String(payload.asBytes()!!)}")
-            presenter.validateInput(endpointId, payload)
+            presenter.handlePayload(endpointId, payload)
         }
         
         override fun onPayloadTransferUpdate(payloadId: String, update: PayloadTransferUpdate) {
@@ -132,4 +132,11 @@ class MainActivity : MvpActivity(), MainView {
             }
     }
     
+    override fun showKeyResponse(endPointId: String, jsonResponse: String) {
+        Nearby.getConnectionsClient(this)
+            .sendPayload(
+                endPointId,
+                Payload.fromBytes(jsonResponse.toByteArray())
+            )
+    }
 }

@@ -13,11 +13,11 @@ import retrofit2.http.Path
  */
 interface Api {
     
-    @GET("api/v1/room/{roomNumber}/keys/get")
+    @GET("room/{roomNumber}/keys/get")
     fun getKeyByNum(@Path("roomNumber") roomNumber: String,
                     @Header("Authorization") token: String): Single<Response<KeyResponse>>
     
-    @GET("api/v1/room/{roomNumber}/keys/return")
+    @GET("room/{roomNumber}/keys/return")
     fun returnKeyByNum(@Path("roomNumber") roomNumber: String,
                        @Header("Authorization") token: String): Single<Response<KeyResponse>>
     

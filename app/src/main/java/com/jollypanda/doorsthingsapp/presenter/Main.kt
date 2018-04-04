@@ -1,6 +1,5 @@
 package com.jollypanda.doorsthingsapp.presenter
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.arellomobile.mvp.MvpView
@@ -9,6 +8,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.google.android.gms.nearby.connection.Payload
 import com.jollypanda.doorsthingsapp.data.remote.request.ACTION
 import com.jollypanda.doorsthingsapp.data.remote.request.KeyRequest
+import com.jollypanda.doorsthingsapp.data.remote.response.KeyResponse
 import com.jollypanda.petrsudoors.core.di.inject
 
 /**
@@ -17,23 +17,46 @@ import com.jollypanda.petrsudoors.core.di.inject
  */
 @StateStrategyType(SkipStrategy::class)
 interface MainView : MvpView {
-
+    fun showKeyResponse(endPointId: String, jsonResponse: String)
 }
 
 @InjectViewState
 class MainPresenter : MvpPresenter<MainView>() {
     
     private val gson by inject { gson }
+    private val keyModel by inject { keyModel }
     
     var endPointId: String? = null
     
-    fun validateInput(endpointId: String, payload: Payload) {
+    fun handlePayload(endpointId: String, payload: Payload) {
         val s = String(payload.asBytes()!!)
         val request = gson.fromJson<KeyRequest>(s, KeyRequest::class.java)
         when (request.action) {
-            ACTION.GET_KEY -> Log.e("VALIDATE", "GET" + request.toString())
-            ACTION.RETURN_KEY -> Log.e("VALIDATE", "RETURN")
+            ACTION.GET_KEY -> getKeyByNumber(endpointId, request)
+            ACTION.RETURN_KEY -> returnKeyByNumber(endpointId, request)
         }
+    }
+    
+    private fun getKeyByNumber(endPointId: String, request: KeyRequest) {
+        keyModel.getKey(request.roomNumber, request.token)
+            .map { Pair(endPointId, it) }
+            .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
+            .subscribe(
+                this::handleKeyResponse
+            )
+    }
+    
+    private fun returnKeyByNumber(endPointId: String, request: KeyRequest) {
+        keyModel.returnKey(request.roomNumber, request.token)
+            .map { Pair(endPointId, it) }
+            .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
+            .subscribe(
+                this::handleKeyResponse
+            )
+    }
+    
+    private fun handleKeyResponse(pair: Pair<String, KeyResponse>) {
+        viewState.showKeyResponse(pair.first, gson.toJson(pair.second))
     }
     
 }
