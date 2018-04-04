@@ -1,7 +1,6 @@
 package com.jollypanda.petrsudoors.core
 
 import android.app.Application
-import android.support.multidex.MultiDexApplication
 import com.jollypanda.petrsudoors.core.di.component.CoreComponent
 import com.jollypanda.petrsudoors.core.di.component.DaggerCoreComponent
 import com.jollypanda.petrsudoors.core.di.module.AppModule

@@ -1,5 +1,6 @@
 package com.jollypanda.petrsudoors.core.di.component
 
+import com.jollypanda.doorsthingsapp.core.di.module.ModelsModule
 import com.jollypanda.petrsudoors.core.di.Injector
 import com.jollypanda.petrsudoors.core.di.module.AppModule
 import com.jollypanda.petrsudoors.core.di.module.NetworkModule
@@ -12,7 +13,7 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(
-        modules = [AppModule::class, NetworkModule::class]
+        modules = [AppModule::class, NetworkModule::class, ModelsModule::class]
 )
 interface CoreComponent {
     fun injectTo(injector: Injector)

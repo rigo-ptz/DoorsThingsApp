@@ -4,6 +4,9 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    compileOptions {
+        incremental = false
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.jollypanda.doorsthingsapp"
@@ -35,6 +38,7 @@ dependencies {
 
     // SUPPORT
     implementation 'com.android.support:support-v4:27.1.0'
+    implementation "com.android.support:appcompat-v7:27.1.0"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // GS

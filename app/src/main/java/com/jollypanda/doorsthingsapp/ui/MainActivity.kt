@@ -1,4 +1,4 @@
-package com.jollypanda.doorsthingsapp
+package com.jollypanda.doorsthingsapp.ui
 
 import android.content.Context
 import android.net.wifi.WifiManager
@@ -8,6 +8,7 @@ import com.arellomobile.mvp.MvpActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import com.jollypanda.doorsthingsapp.R
 import com.jollypanda.doorsthingsapp.presenter.MainPresenter
 import com.jollypanda.doorsthingsapp.presenter.MainView
 

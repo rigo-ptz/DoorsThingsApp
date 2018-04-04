@@ -31,7 +31,7 @@ class MainPresenter : MvpPresenter<MainView>() {
         val s = String(payload.asBytes()!!)
         val request = gson.fromJson<KeyRequest>(s, KeyRequest::class.java)
         when (request.action) {
-            ACTION.GET_KEY -> Log.e("VALIDATE", "GET")
+            ACTION.GET_KEY -> Log.e("VALIDATE", "GET" + request.toString())
             ACTION.RETURN_KEY -> Log.e("VALIDATE", "RETURN")
         }
     }
