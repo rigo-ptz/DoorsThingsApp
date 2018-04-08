@@ -15,6 +15,10 @@ class KeyModel(
         api.getKeyByNum(number, "JWT $token")
             .asRetrofitBody()
     
+    fun getKeyBySchedule(date: String, token: String) =
+            api.getKeyBySchedule(date, "JWT $token")
+                .asRetrofitBody()
+    
     
     fun returnKey(number: String, token: String) =
             api.returnKeyByNum(number, "JWT $token")

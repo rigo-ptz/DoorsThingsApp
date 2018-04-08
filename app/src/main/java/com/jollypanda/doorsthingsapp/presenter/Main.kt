@@ -33,12 +33,22 @@ class MainPresenter : MvpPresenter<MainView>() {
         val request = gson.fromJson<KeyRequest>(s, KeyRequest::class.java)
         when (request.action) {
             ACTION.GET_KEY -> getKeyByNumber(endpointId, request)
+            ACTION.GET_KEY_BY_SCHEDULE -> getKeyBySchedule(endpointId, request)
             ACTION.RETURN_KEY -> returnKeyByNumber(endpointId, request)
         }
     }
     
     private fun getKeyByNumber(endPointId: String, request: KeyRequest) {
-        keyModel.getKey(request.roomNumber, request.token)
+        keyModel.getKey(request.roomNumber!!, request.token)
+            .map { Pair(endPointId, it) }
+            .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
+            .subscribe(
+                this::handleKeyResponse
+            )
+    }
+    
+    private fun getKeyBySchedule(endPointId: String, request: KeyRequest) {
+        keyModel.getKeyBySchedule(request.time!!, request.token)
             .map { Pair(endPointId, it) }
             .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
             .subscribe(
@@ -47,7 +57,7 @@ class MainPresenter : MvpPresenter<MainView>() {
     }
     
     private fun returnKeyByNumber(endPointId: String, request: KeyRequest) {
-        keyModel.returnKey(request.roomNumber, request.token)
+        keyModel.returnKey(request.roomNumber!!, request.token)
             .map { Pair(endPointId, it) }
             .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
             .subscribe(

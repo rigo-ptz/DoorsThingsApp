@@ -17,6 +17,10 @@ interface Api {
     fun getKeyByNum(@Path("roomNumber") roomNumber: String,
                     @Header("Authorization") token: String): Single<Response<KeyResponse>>
     
+    @GET("teacher/schedule/{date}/room/keys/get")
+    fun getKeyBySchedule(@Path("date") date: String,
+                         @Header("Authorization") token: String): Single<Response<KeyResponse>>
+    
     @GET("room/{roomNumber}/keys/return")
     fun returnKeyByNum(@Path("roomNumber") roomNumber: String,
                        @Header("Authorization") token: String): Single<Response<KeyResponse>>
