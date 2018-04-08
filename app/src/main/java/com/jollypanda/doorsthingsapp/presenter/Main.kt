@@ -41,7 +41,7 @@ class MainPresenter : MvpPresenter<MainView>() {
     private fun getKeyByNumber(endPointId: String, request: KeyRequest) {
         keyModel.getKey(request.roomNumber!!, request.token)
             .map { Pair(endPointId, it) }
-            .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
+            .onErrorReturn { Pair(endPointId, KeyResponse(ACTION.GET_KEY, null, null, it.message)) }
             .subscribe(
                 this::handleKeyResponse
             )
@@ -50,7 +50,7 @@ class MainPresenter : MvpPresenter<MainView>() {
     private fun getKeyBySchedule(endPointId: String, request: KeyRequest) {
         keyModel.getKeyBySchedule(request.time!!, request.token)
             .map { Pair(endPointId, it) }
-            .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
+            .onErrorReturn { Pair(endPointId, KeyResponse(ACTION.GET_KEY_BY_SCHEDULE,null, null, it.message)) }
             .subscribe(
                 this::handleKeyResponse
             )
@@ -59,7 +59,7 @@ class MainPresenter : MvpPresenter<MainView>() {
     private fun returnKeyByNumber(endPointId: String, request: KeyRequest) {
         keyModel.returnKey(request.roomNumber!!, request.token)
             .map { Pair(endPointId, it) }
-            .onErrorReturn { Pair(endPointId, KeyResponse(null, null, it.message)) }
+            .onErrorReturn { Pair(endPointId, KeyResponse(ACTION.RETURN_KEY, null, null, it.message)) }
             .subscribe(
                 this::handleKeyResponse
             )
