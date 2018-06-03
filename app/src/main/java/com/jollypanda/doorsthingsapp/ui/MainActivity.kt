@@ -1,5 +1,6 @@
 package com.jollypanda.doorsthingsapp.ui
 
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.Bundle
@@ -41,15 +42,18 @@ class MainActivity : MvpActivity(), MainView {
     private val connectionLifecycleCallback = object : ConnectionLifecycleCallback() {
         
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
-            Log.e("NEARBY", "connectionLifecycleCallback onConnectionInitiated")
+            Log.e("NEARBY", "connectionLifecycleCallback onConnectionInitiated from ${connectionInfo.endpointName} isIncoming=${connectionInfo.isIncomingConnection}")
             // Automatically accept the connection on both sides.
+            if (connectionInfo.endpointName != "com.jollypanda.petrsudoors")
+                Nearby.getConnectionsClient(this@MainActivity).rejectConnection(endpointId)
             Nearby.getConnectionsClient(this@MainActivity).acceptConnection(endpointId, payloadCallback)
         }
         
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
             when (result.status.statusCode) {
                 ConnectionsStatusCodes.STATUS_OK -> {
-                    presenter.endPointId = endpointId
+//                    presenter.endPointId = endpointId
+                    presenter.addEndPointId(endpointId)
                     Log.e("NEARBY", "connectionLifecycleCallback onConnectionResult OK")
                 }
                 
@@ -66,7 +70,8 @@ class MainActivity : MvpActivity(), MainView {
         override fun onDisconnected(endpointId: String) {
             // We've been disconnected from this endpoint. No more data can be
             // sent or received.
-            presenter.endPointId = null
+//            presenter.endPointId = null
+            presenter.removeEndPoint(endpointId)
             Log.e("NEARBY", "connectionLifecycleCallback onDisconnected")
         }
     }
@@ -92,22 +97,26 @@ class MainActivity : MvpActivity(), MainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initWiFi()
+        initWiFiAndBluetooth()
         startAdvertising()
     }
     
-    override fun onStop() {
-        Log.e("MAIN", "onStop")
-        presenter.endPointId?.apply {
+    override fun onDestroy() {
+        Log.e("MAIN", "onDestroy")
+        /*presenter.endPointId?.apply {
             Nearby.getConnectionsClient(this@MainActivity).disconnectFromEndpoint(this)
-        }
+        }*/
         Nearby.getConnectionsClient(this).stopAdvertising()
-        super.onStop()
+        super.onDestroy()
     }
     
-    private fun initWiFi() {
+    private fun initWiFiAndBluetooth() {
         val wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
         wifiManager.isWifiEnabled = true
+    
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        wifiManager.isWifiEnabled = true
+        bluetoothManager.adapter.enable()
     }
     
     private fun startAdvertising() {
@@ -117,7 +126,7 @@ class MainActivity : MvpActivity(), MainView {
                 "com.jollypanda.doorsthingsapp",
                 "com.jollypanda.doorsthingsappID1",
                 connectionLifecycleCallback,
-                AdvertisingOptions(Strategy.P2P_STAR)
+                AdvertisingOptions(Strategy.P2P_CLUSTER)
                 /*AdvertisingOptions.Builder()
                     .setStrategy(Strategy.P2P_POINT_TO_POINT)
                     .build()*/
@@ -129,6 +138,7 @@ class MainActivity : MvpActivity(), MainView {
                 // We were unable to start advertising.
                 Log.e("NEARBY", "startAdvertising FAIL")
                 it.printStackTrace()
+                startAdvertising()
             }
     }
     

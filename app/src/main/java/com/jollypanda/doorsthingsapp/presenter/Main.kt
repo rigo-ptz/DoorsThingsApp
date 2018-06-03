@@ -26,7 +26,9 @@ class MainPresenter : MvpPresenter<MainView>() {
     private val gson by inject { gson }
     private val keyModel by inject { keyModel }
     
-    var endPointId: String? = null
+//    var endPointId: String? = null
+    
+    private val endPointIdSet = mutableSetOf<String>()
     
     fun handlePayload(endpointId: String, payload: Payload) {
         val s = String(payload.asBytes()!!)
@@ -67,6 +69,14 @@ class MainPresenter : MvpPresenter<MainView>() {
     
     private fun handleKeyResponse(pair: Pair<String, KeyResponse>) {
         viewState.showKeyResponse(pair.first, gson.toJson(pair.second))
+    }
+    
+    fun removeEndPoint(endpointId: String) {
+        endPointIdSet.remove(endpointId)
+    }
+    
+    fun addEndPointId(endpointId: String) {
+        endPointIdSet.add(endpointId)
     }
     
 }
